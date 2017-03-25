@@ -67,3 +67,18 @@ private:
 	bool gameIsStarted = false;
 	/********************************/
 };
+
+//TODO
+// Add 2d bool array to board
+// add check to board to check location for obstacle
+// add function to board to spawn random obstacle (needs snake and goal objects using forward declaration)
+// add function to board to draw each obstacle
+// add calls in game to check next move for obstacle, draw obstacles
+
+//notes:
+
+// 2d arrays are simply 1d arrays with function to get and set for each row
+// to get/set an x,y value, calculate cell with y * width of array + x
+
+// homework:
+// PoisonSnake - in addition to obstacles, add random poison to board, which speeds up snake when eaten.

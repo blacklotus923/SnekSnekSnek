@@ -28,11 +28,14 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd ),
 	brd( gfx ),
 	rng( std::random_device()() ),
-	snek( {2,2} ),
-	goal( rng,brd,snek )
+	snek( {2,2} )
 {
 	sndTitle.Play( 1.0f,1.0f );
-	brd.SpawnPoison(rng, snek, goal);
+	brd.SpawnPoison(rng, snek);
+	for (int i = 0; i < numFruit; ++i)
+	{
+		brd.SpawnFruit(rng,snek);
+	}
 }
 
 void Game::Go()
@@ -77,9 +80,10 @@ void Game::UpdateModel()
 			{
 				snekMoveCounter -= snekMovePeriodAdjusted;
 				const Location next = snek.GetNextHeadLocation( delta_loc );
+				int eating = brd.EatAt(next);
 				if( !brd.IsInsideBoard( next ) ||
 					snek.IsInTileExceptEnd( next ) ||
-					brd.IsObstacle(next))
+					eating == 2)
 				{
 					gameIsOver = true;
 					sndFart.Play();
@@ -87,16 +91,16 @@ void Game::UpdateModel()
 				}
 				else
 				{
-					if( next == goal.GetLocation() )
+					if( eating == 1 )
 					{
 						snek.GrowAndMoveBy( delta_loc );
-						goal.Respawn( rng,brd,snek );
-						brd.SpawnObstacles(rng, snek, goal);
+						brd.SpawnFruit(rng, snek);
+						brd.SpawnRock(rng, snek);
 						sfxEat.Play( rng,0.8f );
 					}
 					else
 					{
-						if (brd.EatPoisonAt(next))
+						if (eating == 3)
 						{
 							snekMovePeriod = std::max(snekMovePeriod - snekSpeedupFactor, snekMovePeriodMin);
 							sndFart.Play();
@@ -123,8 +127,7 @@ void Game::ComposeFrame()
 	if( gameIsStarted )
 	{
 		snek.Draw( brd );
-		goal.Draw( brd );
-		brd.DrawObstacles();
+		brd.DrawBoard();
 		if( gameIsOver )
 		{
 			SpriteCodex::DrawGameOver( 350,265,gfx );

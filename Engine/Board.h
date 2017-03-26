@@ -13,14 +13,15 @@ public:
 	int GetGridHeight() const;
 	bool IsInsideBoard( const Location& loc ) const;
 	void DrawBorder();
-	bool IsObstacle(const Location& loc) const;
-	bool EatPoisonAt(const Location& loc);
-	void SpawnObstacles(std::mt19937 rng, const class Snake& snake, const class Goal& goal);
-	void SpawnPoison(std::mt19937 rng, const class Snake& snake, const class Goal& goal);
-	void DrawObstacles();
+	int EatAt(const Location& loc);
+	void SpawnRock(std::mt19937 rng, const class Snake& snake);
+	void SpawnFruit(std::mt19937 rng, const class Snake& snake);
+	void SpawnPoison(std::mt19937 rng, const class Snake& snake);
+	void DrawBoard();
 private:
 	static constexpr Color borderColor = Colors::Blue;
 	static constexpr Color obstacleColor = Colors::Gray;
+	static constexpr Color goalColor = Colors::Red;
 	static constexpr Color poisonColor = { 31,4,31 };
 	static constexpr int dimension = 20;
 	static constexpr int cellPadding = 1;
@@ -30,8 +31,7 @@ private:
 	static constexpr int borderPadding = 2;
 	static constexpr int x = 70;
 	static constexpr int y = 50;
-	static constexpr int poisonPercent = 60;
-	bool obstacles[width*height] = { false };
-	bool poison[width*height] = { false };
+	static constexpr int poisonPercent = 40;
+	int board[width * height] = { 0 }; //0=empty, 1=fruit, 2=rock, 3=poison
 	Graphics& gfx;
 };

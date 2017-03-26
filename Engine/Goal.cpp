@@ -15,10 +15,9 @@ void Goal::Respawn( std::mt19937 & rng,Board & brd,const Snake & snake )
 	{
 		newLoc.x = xDist( rng );
 		newLoc.y = yDist( rng );
-	} while( snake.IsInTile( newLoc ) && !brd.IsObstacle(newLoc));
+	} while( snake.IsInTile( newLoc ));
 
 	loc = newLoc;
-	brd.EatPoisonAt(loc);
 }
 
 void Goal::Draw( Board & brd ) const

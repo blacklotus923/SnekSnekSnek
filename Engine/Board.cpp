@@ -1,6 +1,5 @@
 #include "Board.h"
 #include "Snake.h"
-#include "Goal.h"
 #include <assert.h>
 
 Board::Board( Graphics& gfx )
@@ -54,23 +53,15 @@ void Board::DrawBorder()
 	gfx.DrawRect( left,bottom - borderWidth,right,bottom,borderColor );
 }
 
-bool Board::IsObstacle(const Location & loc) const
+int Board::EatAt(const Location & loc)
 {
-	return obstacles[loc.y*width+loc.x];
+	const int i = loc.y * width + loc.x;
+	const int r = board[i];
+	if (r == 1 || r ==3) board[i] = 0;
+	return r;
 }
 
-bool Board::EatPoisonAt(const Location & loc)
-{
-	int i = loc.y * width + loc.x;
-	if (poison[i])
-	{
-		poison[i] = false;
-		return true;
-	}
-	return false;
-}
-
-void Board::SpawnObstacles(std::mt19937 rng, const Snake & snake, const Goal & goal)
+void Board::SpawnRock(std::mt19937 rng, const Snake & snake)
 {
 	std::uniform_int_distribution<int> xDist(0, width - 1);
 	std::uniform_int_distribution<int> yDist(0, height - 1);
@@ -82,12 +73,29 @@ void Board::SpawnObstacles(std::mt19937 rng, const Snake & snake, const Goal & g
 		newLoc.x = xDist(rng);
 		newLoc.y = yDist(rng);
 		i = newLoc.y * width + newLoc.x;
-	} while (snake.IsInTile(newLoc) || obstacles[i] || goal.GetLocation() == newLoc);
+	} while (snake.IsInTile(newLoc) || board[i] == 1 || board[i] == 2);
 
-	obstacles[i] = true;
+	board[i] = 2;
 }
 
-void Board::SpawnPoison(std::mt19937 rng, const Snake & snake, const Goal & goal)
+void Board::SpawnFruit(std::mt19937 rng, const Snake & snake)
+{
+	std::uniform_int_distribution<int> xDist(0, width - 1);
+	std::uniform_int_distribution<int> yDist(0, height - 1);
+
+	Location newLoc;
+	int i;
+	do
+	{
+		newLoc.x = xDist(rng);
+		newLoc.y = yDist(rng);
+		i = newLoc.y * width + newLoc.x;
+	} while (snake.IsInTile(newLoc) || board[i] == 1 || board[i] == 2);
+
+	board[i] = 1;
+}
+
+void Board::SpawnPoison(std::mt19937 rng, const Snake & snake)
 {
 	std::uniform_int_distribution<int> poisonDist(0, 100);
 	for (int y = 0; y < height; ++y)
@@ -95,21 +103,22 @@ void Board::SpawnPoison(std::mt19937 rng, const Snake & snake, const Goal & goal
 		for (int x = 0; x < width; ++x)
 		{
 			const int i = y*width + x;
-			if (poisonDist(rng) < poisonPercent && !snake.IsInTile({ x,y }) && !(goal.GetLocation() == Location{ x, y })) poison[i] = true;
-			else poison[i] = false;
+			if (poisonDist(rng) < poisonPercent && !snake.IsInTile({ x,y }) && board[i]!=1) board[i] = 3;
+			else board[i] = 0;
 		}
 	}
 }
 
-void Board::DrawObstacles()
+void Board::DrawBoard()
 {
 	for (int y = 0; y < height; ++y)
 	{
 		for (int x = 0; x < width; ++x)
 		{
-			const int i = y*width + x;
-			if(obstacles[i]) DrawCell({ x,y }, obstacleColor);
-			else if (poison[i]) DrawCell({ x,y }, poisonColor);
+			const int cell = board[y*width + x];
+			if (cell == 1) DrawCell({ x,y }, goalColor);
+			else if (cell == 2) DrawCell({ x,y }, obstacleColor);
+			else if (cell == 3) DrawCell({ x,y }, poisonColor);
 		}
 	}
 }

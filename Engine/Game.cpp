@@ -68,10 +68,14 @@ void Game::UpdateModel()
 				delta_loc = { 1,0 };
 			}
 
+			if (wnd.kbd.KeyIsPressed(VK_CONTROL)) snekBoost = 2.0;
+			else snekBoost = 1.0;
+
 			snekMoveCounter += dt;
-			if( snekMoveCounter >= snekMovePeriod )
+			float snekMovePeriodAdjusted = snekMovePeriod / snekBoost;
+			if( snekMoveCounter >= snekMovePeriodAdjusted)
 			{
-				snekMoveCounter -= snekMovePeriod;
+				snekMoveCounter -= snekMovePeriodAdjusted;
 				const Location next = snek.GetNextHeadLocation( delta_loc );
 				if( !brd.IsInsideBoard( next ) ||
 					snek.IsInTileExceptEnd( next ) ||

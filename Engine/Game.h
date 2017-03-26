@@ -69,11 +69,11 @@ private:
 };
 
 //TODO
-// Add 2d bool array to board
-// add check to board to check location for obstacle
-// add function to board to spawn random obstacle (needs snake and goal objects using forward declaration)
-// add function to board to draw each obstacle
-// add calls in game to check next move for obstacle, draw obstacles
+// Add 2d bool array to board _DONE
+// add check to board to check location for obstacle _DONE
+// add function to board to spawn random obstacle (needs snake and goal objects using forward declaration) _DONE
+// add function to board to draw each obstacle  _DONE
+// add calls in game to check next move for obstacle, draw obstacles _DONE
 
 //notes:
 

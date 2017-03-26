@@ -1,4 +1,6 @@
 #include "Board.h"
+#include "Snake.h"
+#include "Goal.h"
 #include <assert.h>
 
 Board::Board( Graphics& gfx )
@@ -50,4 +52,37 @@ void Board::DrawBorder()
 	gfx.DrawRect( right - borderWidth,top + borderWidth,right,bottom - borderWidth,borderColor );
 	// bottom
 	gfx.DrawRect( left,bottom - borderWidth,right,bottom,borderColor );
+}
+
+bool Board::IsObstacle(const Location & loc) const
+{
+	return obstacles[loc.y*width+loc.x];
+}
+
+void Board::SpawnObstacles(std::mt19937 rng, const Snake & snake, const Goal & goal)
+{
+	std::uniform_int_distribution<int> xDist(0, width - 1);
+	std::uniform_int_distribution<int> yDist(0, height - 1);
+
+	Location newLoc;
+	int i;
+	do
+	{
+		newLoc.x = xDist(rng);
+		newLoc.y = yDist(rng);
+		i = newLoc.y * width + newLoc.x;
+	} while (snake.IsInTile(newLoc) || obstacles[i] || goal.GetLocation() == newLoc);
+
+	obstacles[i] = true;
+}
+
+void Board::DrawObstacles()
+{
+	for (int y = 0; y < height; ++y)
+	{
+		for (int x = 0; x < width; ++x)
+		{
+			if(obstacles[y*width + x]) DrawCell({ x,y }, obstacleColor);
+		}
+	}
 }

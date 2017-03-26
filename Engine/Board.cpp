@@ -59,6 +59,17 @@ bool Board::IsObstacle(const Location & loc) const
 	return obstacles[loc.y*width+loc.x];
 }
 
+bool Board::EatPoisonAt(const Location & loc)
+{
+	int i = loc.y * width + loc.x;
+	if (poison[i])
+	{
+		poison[i] = false;
+		return true;
+	}
+	return false;
+}
+
 void Board::SpawnObstacles(std::mt19937 rng, const Snake & snake, const Goal & goal)
 {
 	std::uniform_int_distribution<int> xDist(0, width - 1);
@@ -76,13 +87,29 @@ void Board::SpawnObstacles(std::mt19937 rng, const Snake & snake, const Goal & g
 	obstacles[i] = true;
 }
 
+void Board::SpawnPoison(std::mt19937 rng, const Snake & snake, const Goal & goal)
+{
+	std::uniform_int_distribution<int> poisonDist(0, 100);
+	for (int y = 0; y < height; ++y)
+	{
+		for (int x = 0; x < width; ++x)
+		{
+			const int i = y*width + x;
+			if (poisonDist(rng) < poisonPercent && !snake.IsInTile({ x,y }) && !(goal.GetLocation() == Location{ x, y })) poison[i] = true;
+			else poison[i] = false;
+		}
+	}
+}
+
 void Board::DrawObstacles()
 {
 	for (int y = 0; y < height; ++y)
 	{
 		for (int x = 0; x < width; ++x)
 		{
-			if(obstacles[y*width + x]) DrawCell({ x,y }, obstacleColor);
+			const int i = y*width + x;
+			if(obstacles[i]) DrawCell({ x,y }, obstacleColor);
+			else if (poison[i]) DrawCell({ x,y }, poisonColor);
 		}
 	}
 }

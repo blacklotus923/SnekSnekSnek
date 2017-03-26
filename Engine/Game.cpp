@@ -32,6 +32,7 @@ Game::Game( MainWindow& wnd )
 	goal( rng,brd,snek )
 {
 	sndTitle.Play( 1.0f,1.0f );
+	brd.SpawnPoison(rng, snek, goal);
 }
 
 void Game::Go()
@@ -91,12 +92,16 @@ void Game::UpdateModel()
 					}
 					else
 					{
+						if (brd.EatPoisonAt(next))
+						{
+							snekMovePeriod = std::max(snekMovePeriod - snekSpeedupFactor, snekMovePeriodMin);
+							sndFart.Play();
+						}
 						snek.MoveBy( delta_loc );
 					}
 					sfxSlither.Play( rng,0.08f );
 				}
 			}
-			snekMovePeriod = std::max( snekMovePeriod - dt * snekSpeedupFactor,snekMovePeriodMin );
 		}
 	}
 	else
@@ -115,11 +120,11 @@ void Game::ComposeFrame()
 	{
 		snek.Draw( brd );
 		goal.Draw( brd );
+		brd.DrawObstacles();
 		if( gameIsOver )
 		{
 			SpriteCodex::DrawGameOver( 350,265,gfx );
 		}
-		brd.DrawObstacles();
 		brd.DrawBorder();
 	}
 	else

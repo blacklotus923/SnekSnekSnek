@@ -59,7 +59,7 @@ private:
 	Sound sndMusic = Sound( L"Sounds\\Music_Loop.wav",Sound::LoopType::AutoFullSound );
 	Sound sndTitle = Sound( L"Sounds\\Title.wav" );
 	Sound sndFart = Sound( L"Sounds\\Fart.wav" );
-	static constexpr float snekMovePeriodMin = 0.06f;
+	static constexpr float snekMovePeriodMin = 0.03f;
 	float snekMovePeriod = 0.4f;
 	float snekMoveCounter = 0.0f;
 	static constexpr float snekSpeedupFactor = 0.005f;
@@ -82,3 +82,4 @@ private:
 
 // homework:
 // PoisonSnake - in addition to obstacles, add random poison to board, which speeds up snake when eaten.
+//idea : create int 2d array where int = type of board square (none=0,obstacle=1, poison=2).  Edit board draw function and game check functions accordingly.

@@ -14,11 +14,14 @@ public:
 	bool IsInsideBoard( const Location& loc ) const;
 	void DrawBorder();
 	bool IsObstacle(const Location& loc) const;
+	bool EatPoisonAt(const Location& loc);
 	void SpawnObstacles(std::mt19937 rng, const class Snake& snake, const class Goal& goal);
+	void SpawnPoison(std::mt19937 rng, const class Snake& snake, const class Goal& goal);
 	void DrawObstacles();
 private:
 	static constexpr Color borderColor = Colors::Blue;
 	static constexpr Color obstacleColor = Colors::Gray;
+	static constexpr Color poisonColor = { 31,4,31 };
 	static constexpr int dimension = 20;
 	static constexpr int cellPadding = 1;
 	static constexpr int width = 32;
@@ -27,6 +30,8 @@ private:
 	static constexpr int borderPadding = 2;
 	static constexpr int x = 70;
 	static constexpr int y = 50;
+	static constexpr int poisonPercent = 60;
 	bool obstacles[width*height] = { false };
+	bool poison[width*height] = { false };
 	Graphics& gfx;
 };

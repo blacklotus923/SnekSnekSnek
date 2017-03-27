@@ -53,10 +53,10 @@ private:
 	std::mt19937 rng;
 	FrameTimer ft;
 	SoundEffect sfxEat = SoundEffect( { L"Sounds\\Eat.wav" } );
+	SoundEffect sfxFart = SoundEffect({ L"Sounds\\Fart.wav"} );
 	SoundEffect sfxSlither = SoundEffect( { L"Sounds\\Slither0.wav",L"Sounds\\Slither1.wav",L"Sounds\\Slither2.wav" } );
 	Sound sndMusic = Sound( L"Sounds\\Music_Loop.wav",Sound::LoopType::AutoFullSound );
 	Sound sndTitle = Sound( L"Sounds\\Title.wav" );
-	Sound sndFart = Sound( L"Sounds\\Fart.wav" );
 	static constexpr float snekMovePeriodMin = 0.03f;
 	static constexpr float snekSpeedupFactor = 0.95f;
 	float snekBoost = 1.0f;

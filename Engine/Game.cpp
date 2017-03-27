@@ -86,7 +86,7 @@ void Game::UpdateModel()
 					eating == 2)
 				{
 					gameIsOver = true;
-					sndFart.Play();
+					sfxFart.Play(rng,1.2f);
 					sndMusic.StopAll();
 				}
 				else
@@ -103,7 +103,7 @@ void Game::UpdateModel()
 						if (eating == 3)
 						{
 							snekMovePeriod = std::max(snekMovePeriod * snekSpeedupFactor, snekMovePeriodMin);
-							sndFart.Play();
+							sfxFart.Play(rng,0.4f);
 						}
 						snek.MoveBy( delta_loc );
 					}

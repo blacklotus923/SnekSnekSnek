@@ -61,38 +61,32 @@ Board::Contents Board::EatAt(const Location & loc)
 	return r;
 }
 
-void Board::SpawnRock(std::mt19937 rng, const Snake & snake)
+void Board::Spawn(std::mt19937 rng, const Snake & snake, const Board::Contents ctype)
 {
 	std::uniform_int_distribution<int> xDist(0, width - 1);
 	std::uniform_int_distribution<int> yDist(0, height - 1);
 
 	Location newLoc;
 	int i;
-	do
+	if (ctype == Contents::Poison)
 	{
-		newLoc.x = xDist(rng);
-		newLoc.y = yDist(rng);
-		i = newLoc.y * width + newLoc.x;
-	} while (snake.IsInTile(newLoc) || contents[i] == Contents::Fruit || contents[i] == Contents::Rock);
-
-	contents[i] = Contents::Rock;
-}
-
-void Board::SpawnFruit(std::mt19937 rng, const Snake & snake)
-{
-	std::uniform_int_distribution<int> xDist(0, width - 1);
-	std::uniform_int_distribution<int> yDist(0, height - 1);
-
-	Location newLoc;
-	int i;
-	do
+		do
+		{
+			newLoc.x = xDist(rng);
+			newLoc.y = yDist(rng);
+			i = newLoc.y * width + newLoc.x;
+		} while (snake.IsInTile(newLoc) || contents[i] == Contents::Fruit || contents[i] == Contents::Rock || contents[i] == Contents::Poison);
+	}
+	else
 	{
-		newLoc.x = xDist(rng);
-		newLoc.y = yDist(rng);
-		i = newLoc.y * width + newLoc.x;
-	} while (snake.IsInTile(newLoc) || contents[i] == Contents::Fruit || contents[i] == Contents::Rock);
-
-	contents[i] = Contents::Fruit;
+		do
+		{
+			newLoc.x = xDist(rng);
+			newLoc.y = yDist(rng);
+			i = newLoc.y * width + newLoc.x;
+		} while (snake.IsInTile(newLoc) || contents[i] == Contents::Fruit || contents[i] == Contents::Rock);
+	}
+	if(ctype != Contents::Empty) contents[i] = ctype;
 }
 
 void Board::SpawnPoison(std::mt19937 rng, const Snake & snake)

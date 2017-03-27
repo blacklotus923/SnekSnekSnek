@@ -34,7 +34,7 @@ Game::Game( MainWindow& wnd )
 	brd.SpawnPoison(rng, snek);
 	for (int i = 0; i < numFruit; ++i)
 	{
-		brd.SpawnFruit(rng,snek);
+		brd.Spawn(rng,snek,Board::Contents::Fruit);
 	}
 }
 
@@ -94,8 +94,9 @@ void Game::UpdateModel()
 					if( eating == Board::Contents::Fruit)
 					{
 						snek.GrowAndMoveBy( delta_loc );
-						brd.SpawnFruit(rng, snek);
-						brd.SpawnRock(rng, snek);
+						brd.Spawn(rng, snek, Board::Contents::Fruit);
+						brd.Spawn(rng, snek, Board::Contents::Rock);
+						brd.Spawn(rng, snek, Board::Contents::Poison);
 						sfxEat.Play( rng,0.8f );
 					}
 					else

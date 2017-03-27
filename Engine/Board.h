@@ -22,8 +22,7 @@ public:
 	bool IsInsideBoard( const Location& loc ) const;
 	void DrawBorder();
 	Contents EatAt(const Location& loc);
-	void SpawnRock(std::mt19937 rng, const class Snake& snake);
-	void SpawnFruit(std::mt19937 rng, const class Snake& snake);
+	void Spawn(std::mt19937 rng, const class Snake& snake, const Contents ctype);
 	void SpawnPoison(std::mt19937 rng, const class Snake& snake);
 	void DrawBoard();
 private:

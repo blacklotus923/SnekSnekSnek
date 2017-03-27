@@ -53,11 +53,11 @@ void Board::DrawBorder()
 	gfx.DrawRect( left,bottom - borderWidth,right,bottom,borderColor );
 }
 
-int Board::EatAt(const Location & loc)
+Board::Contents Board::EatAt(const Location & loc)
 {
 	const int i = loc.y * width + loc.x;
-	const int r = board[i];
-	if (r == 1 || r ==3) board[i] = 0;
+	Contents r = contents[i];
+	if (r == Contents::Fruit || r == Contents::Poison) contents[i] = Contents::Empty;
 	return r;
 }
 
@@ -73,9 +73,9 @@ void Board::SpawnRock(std::mt19937 rng, const Snake & snake)
 		newLoc.x = xDist(rng);
 		newLoc.y = yDist(rng);
 		i = newLoc.y * width + newLoc.x;
-	} while (snake.IsInTile(newLoc) || board[i] == 1 || board[i] == 2);
+	} while (snake.IsInTile(newLoc) || contents[i] == Contents::Fruit || contents[i] == Contents::Rock);
 
-	board[i] = 2;
+	contents[i] = Contents::Rock;
 }
 
 void Board::SpawnFruit(std::mt19937 rng, const Snake & snake)
@@ -90,9 +90,9 @@ void Board::SpawnFruit(std::mt19937 rng, const Snake & snake)
 		newLoc.x = xDist(rng);
 		newLoc.y = yDist(rng);
 		i = newLoc.y * width + newLoc.x;
-	} while (snake.IsInTile(newLoc) || board[i] == 1 || board[i] == 2);
+	} while (snake.IsInTile(newLoc) || contents[i] == Contents::Fruit || contents[i] == Contents::Rock);
 
-	board[i] = 1;
+	contents[i] = Contents::Fruit;
 }
 
 void Board::SpawnPoison(std::mt19937 rng, const Snake & snake)
@@ -103,8 +103,8 @@ void Board::SpawnPoison(std::mt19937 rng, const Snake & snake)
 		for (int x = 0; x < width; ++x)
 		{
 			const int i = y*width + x;
-			if (poisonDist(rng) < poisonPercent && !snake.IsInTile({ x,y }) && board[i]!=1) board[i] = 3;
-			else board[i] = 0;
+			if (poisonDist(rng) < poisonPercent && !snake.IsInTile({ x,y }) && contents[i]!=Contents::Fruit) contents[i] = Contents::Poison;
+			else contents[i] = Contents::Empty;
 		}
 	}
 }
@@ -115,10 +115,20 @@ void Board::DrawBoard()
 	{
 		for (int x = 0; x < width; ++x)
 		{
-			const int cell = board[y*width + x];
-			if (cell == 1) DrawCell({ x,y }, goalColor);
-			else if (cell == 2) DrawCell({ x,y }, obstacleColor);
-			else if (cell == 3) DrawCell({ x,y }, poisonColor);
+			switch (contents[y*width + x])
+			{
+			case Contents::Fruit:
+				DrawCell({ x,y }, goalColor);
+				break;
+			case Contents::Rock:
+				DrawCell({ x,y }, obstacleColor);
+				break;
+			case Contents::Poison:
+				DrawCell({ x,y }, poisonColor);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 }

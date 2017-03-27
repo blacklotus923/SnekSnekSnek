@@ -80,10 +80,10 @@ void Game::UpdateModel()
 			{
 				snekMoveCounter -= snekMovePeriodAdjusted;
 				const Location next = snek.GetNextHeadLocation( delta_loc );
-				int eating = brd.EatAt(next);
+				Board::Contents eating = brd.EatAt(next);
 				if( !brd.IsInsideBoard( next ) ||
 					snek.IsInTileExceptEnd( next ) ||
-					eating == 2)
+					eating == Board::Contents::Rock)
 				{
 					gameIsOver = true;
 					sfxFart.Play(rng,1.2f);
@@ -91,7 +91,7 @@ void Game::UpdateModel()
 				}
 				else
 				{
-					if( eating == 1 )
+					if( eating == Board::Contents::Fruit)
 					{
 						snek.GrowAndMoveBy( delta_loc );
 						brd.SpawnFruit(rng, snek);
@@ -100,7 +100,7 @@ void Game::UpdateModel()
 					}
 					else
 					{
-						if (eating == 3)
+						if (eating == Board::Contents::Poison)
 						{
 							snekMovePeriod = std::max(snekMovePeriod * snekSpeedupFactor, snekMovePeriodMin);
 							sfxFart.Play(rng,0.4f);

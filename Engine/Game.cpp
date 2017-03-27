@@ -75,7 +75,7 @@ void Game::UpdateModel()
 			else snekBoost = 1.0;
 
 			snekMoveCounter += dt;
-			float snekMovePeriodAdjusted = snekMovePeriod / snekBoost;
+			float snekMovePeriodAdjusted = std::max(snekMovePeriod / snekBoost, snekMovePeriodMin);
 			if( snekMoveCounter >= snekMovePeriodAdjusted)
 			{
 				snekMoveCounter -= snekMovePeriodAdjusted;

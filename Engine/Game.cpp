@@ -102,7 +102,7 @@ void Game::UpdateModel()
 					{
 						if (eating == 3)
 						{
-							snekMovePeriod = std::max(snekMovePeriod - snekSpeedupFactor, snekMovePeriodMin);
+							snekMovePeriod = std::max(snekMovePeriod * snekSpeedupFactor, snekMovePeriodMin);
 							sndFart.Play();
 						}
 						snek.MoveBy( delta_loc );

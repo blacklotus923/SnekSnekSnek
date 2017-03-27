@@ -58,7 +58,7 @@ private:
 	Sound sndTitle = Sound( L"Sounds\\Title.wav" );
 	Sound sndFart = Sound( L"Sounds\\Fart.wav" );
 	static constexpr float snekMovePeriodMin = 0.03f;
-	static constexpr float snekSpeedupFactor = 0.005f;
+	static constexpr float snekSpeedupFactor = 0.95f;
 	float snekBoost = 1.0f;
 	float snekMovePeriod = 0.4f;
 	float snekMoveCounter = 0.0f;
